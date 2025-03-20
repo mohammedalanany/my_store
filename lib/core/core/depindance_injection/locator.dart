@@ -5,6 +5,7 @@ import '../../../features/store_main/data/repositories/main_store_repository_imp
 import '../../../features/store_main/domain/repositories/main_store_repository.dart';
 import '../../../features/store_main/domain/usecases/fetch_recommend_products_usecase.dart';
 import '../../../features/store_main/domain/usecases/fetch_store_main_page_usecase.dart';
+import '../../../features/store_main/presentation/screens/cubit/store_main_cubit.dart';
 import '../../../features/store_main/presentation/screens/store_provider/store_main.dart';
 
 GetIt locator = GetIt.instance;
@@ -30,4 +31,9 @@ Future<void> setupServices() async {
       () => StoreMainProvider(locator(), locator()));
 
   //
+
+  locator.registerFactory(() => StoreMainCubit(
+        fetchStoreMainPageUseCase: locator(),
+        fetchRecommendsProductsMainPageUseCase: locator(),
+      ));
 }
