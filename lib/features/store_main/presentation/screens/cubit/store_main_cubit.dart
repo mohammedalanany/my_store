@@ -19,12 +19,14 @@ class StoreMainCubit extends Cubit<StoreMainState> {
     try {
       final result = await fetchStoreMainPageUseCase.call();
       emit(StoreMainLoaded(result));
+      await fetchRecommendedProducts();
     } catch (e) {
       emit(StoreMainError(e.toString()));
     }
   }
 
   Future<void> fetchRecommendedProducts() async {
+    emit(RecommendedProductsLoading());
     try {
       final result = await fetchRecommendsProductsMainPageUseCase.call();
       emit(RecommendedProductsLoaded(result));
