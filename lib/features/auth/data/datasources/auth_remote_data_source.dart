@@ -7,8 +7,8 @@ class AuthRemoteDataSource {
       "value": passData?.value,
       "type": 'email',
     };
-    final statusCode = await AuthServices.checkUser(data);
-    print('herer $statusCode');
-    return statusCode;
+
+    final response = await AuthServices.checkUser(data);
+    return response;
   }
 }

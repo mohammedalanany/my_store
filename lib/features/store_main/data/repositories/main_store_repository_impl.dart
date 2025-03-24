@@ -44,4 +44,20 @@ class MainStoreRepositoryImpl extends MainStoreRepository {
       EasyLoading.dismiss();
     }
   }
+
+  @override
+  Future<ProductModel> fetchProductDetails(int productId) async {
+    EasyLoading.show();
+    try {
+      final result = await remoteDataSource.fetchProductDetails(productId);
+      return result;
+    } catch (e) {
+      if (e is DioException) {
+        ApiService.handleApiError(e);
+      }
+      throw Exception("Failed to fetch data: $e");
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
 }

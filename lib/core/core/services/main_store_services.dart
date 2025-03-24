@@ -8,4 +8,8 @@ abstract class MainStoreServices {
   static Future fetchMainPageRecommendsProducts() async {
     return await ApiService.getService('/shop/home-products');
   }
+
+  static Future fetchProductDetails(int id) async {
+    return await ApiService.getService('/shop/product-page?product_id=$id');
+  }
 }

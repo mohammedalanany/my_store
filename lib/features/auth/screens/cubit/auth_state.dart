@@ -1,10 +1,8 @@
-import 'package:equatable/equatable.dart';
-
 // States
-sealed class AuthState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+import 'package:flutter/material.dart';
+
+@immutable
+abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
 
@@ -19,7 +17,4 @@ class CheckUserLoaded extends AuthState {
 class CheckUserError extends AuthState {
   final String message;
   CheckUserError(this.message);
-
-  @override
-  List<Object?> get props => [message];
 }

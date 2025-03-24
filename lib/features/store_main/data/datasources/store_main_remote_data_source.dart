@@ -20,4 +20,10 @@ class MainStoreRemoteDataSource {
         .toList();
     return mainPageRecommendProducts;
   }
+
+  Future<ProductModel> fetchProductDetails(int productId) async {
+    final response = await MainStoreServices.fetchProductDetails(productId);
+    print(response);
+    return ProductModel.fromJson(response['product']);
+  }
 }

@@ -186,7 +186,13 @@ class _MyCustomComboBoxState extends State<MyCustomComboBox> {
           ),
         ),
 
-        //validator: widget.validator,
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "This field is required";
+          } else {
+            return null;
+          }
+        },
         onSaved: widget.onSaved,
         // autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: widget.onChangedEvent,
@@ -318,7 +324,13 @@ class MyCustomInput extends StatelessWidget {
           fontFamily: 'Nunito',
         ),
         maxLines: inputMaxLines ?? 1,
-        validator: validator,
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "This field is required";
+          } else {
+            return null;
+          }
+        },
         textAlign: textAlign,
         keyboardType: inputType,
         onFieldSubmitted: onFieldSubmitted,
@@ -405,194 +417,50 @@ class MyCustomInput extends StatelessWidget {
     );
   }
 }
-// class MyCustomInput extends StatelessWidget {
-//   final String labelText;
-//   final EdgeInsets containerMargin;
-//   final String initialValue;
-//   final String errorText;
-//   final Color labelColor;
-//   final bool expands;
-//   final FormFieldValidator<String> validator;
-//   final int inputMaxLines;
-//   final bool enabled;
-//   final TextInputType inputType;
-//   final EdgeInsets contentPadding;
-//   final ValueChanged<String> onFieldSubmitted;
-//   final TextInputAction textInputAction;
-//   final ValueChanged<String> onChanged;
-//   final FormFieldSetter<String> onSaved;
-//   final String placeholder;
-//   final TextEditingController textEditingController;
-//   final bool obsecureText;
-//   final bool readOnly;
-//   final Color cursorColor;
-//   final double inputSize;
-//   final String helperText;
-//   final Color focusedBorderColor;
-//
-//   final Widget prefixIcon;
-//
-//   final Widget prefixWidget;
-//
-//   final bool filledEnabled;
-//   final FocusNode focusNode;
-//   final TextAlign textAlign;
-//   final bool autoFocus;
-//   final bool hasFocus;
-//   final BoxShadow boxShadow;
-//   final FloatingLabelBehavior floatingLabelBehavior;
-//
-//   final Widget suffixIcon;
-//
-//   final BorderSide border;
-//
-//   final bool enableBorder;
-//
-//   final EdgeInsets padding;
-//
-//   MyCustomInput({
-//     this.labelText,
-//     this.contentPadding =
-//     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-//     this.onChanged,
-//     this.enabled = true,
-//     this.textInputAction,
-//     this.errorText,
-//     this.onSaved,
-//     this.textEditingController,
-//     this.expands = false,
-//     this.placeholder,
-//     this.initialValue,
-//     this.inputMaxLines = 1,
-//     this.containerMargin = const EdgeInsets.symmetric(horizontal: 16,vertical: 5),
-//     this.boxShadow,
-//     this.inputType,
-//     this.validator,
-//     this.prefixIcon,
-//     this.obsecureText = false,
-//     this.labelColor = const Color(0xFF05B09C),
-//     Key key,
-//     this.prefixWidget,
-//     this.filledEnabled = true,
-//     this.hasFocus = false,
-//     this.focusNode,
-//     this.suffixIcon,
-//     this.border,
-//     this.enableBorder = false,
-//     this.autoFocus = false,
-//     this.onFieldSubmitted,
-//     this.textAlign = TextAlign.start,
-//     this.cursorColor = const Color(0xFF05B09C),
-//     this.inputSize = 15.0,
-//     this.helperText,
-//     this.floatingLabelBehavior,
-//     this.focusedBorderColor = const Color(0X99000000),
-//     this.padding,
-//     this.readOnly = false
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ClipRRect(
-//       borderRadius: BorderRadius.circular(8),
-//       child: Container(
-//         margin: containerMargin,
-//         height: 48,
-//         padding: EdgeInsets.only(
-//          // bottom: 5,
-//           top: 8,
-//         ),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(8),
-//               border: Border.all(
-//                 width: 1.0,
-//                 color:  hasFocus ? Color(0xBD000000) : Color(0x29000000),
-//               )
-//         ),
-//         child: TextFormField(
-//           focusNode:focusNode ,
-//           expands: expands,
-//           textInputAction: textInputAction,
-//           style: TextStyle(
-//             fontSize: 16,
-//             color:  Color(0xDE000000),
-//             // height: 2,
-//             letterSpacing: .29,
-//             fontWeight: FontWeight.w600,
-//             fontFamily: 'Nunito',
-//           ),
-//           maxLines: inputMaxLines ?? 1,
-//           validator: validator,
-//           autovalidateMode: AutovalidateMode.onUserInteraction,
-//           textAlign: textAlign,
-//           keyboardType: inputType,
-//           onFieldSubmitted: onFieldSubmitted,
-//           autofocus: autoFocus,
-//           initialValue: initialValue,
-//           obscureText: obsecureText,
-//           onChanged: onChanged,
-//           onSaved: onSaved,
-//           readOnly: readOnly,
-//           controller: textEditingController,
-//           cursorColor: cursorColor,cursorHeight: 20,cursorWidth: 1.5,
-//           decoration: InputDecoration(
-//             contentPadding: padding,
-//             // floatingLabelBehavior:
-//             // floatingLabelBehavior ?? FloatingLabelBehavior.auto,
-//             helperText: helperText ?? null,
-// //          focusedBorder: OutlineInputBorder(
-// //            borderRadius: BorderRadius.circular(4.0),
-// //            borderSide: BorderSide(
-// //              width: 2.0,
-// //              color: Theme.of(context).accentColor,
-// //            ),
-// //          ),
-//
-//             labelStyle: TextStyle(
-//             fontSize: 16,
-//             color:  Color(0x99000000),
-//             // height: 1.5,
-//             letterSpacing: .4,
-//             fontWeight: FontWeight.w600,
-//             fontFamily: 'Nunito',
-//           ),
-//             hintStyle: TextStyle(
-//               fontSize: 16,
-//               color:  Color(0xFF000000).withOpacity(.6),
-//               // height: 1.5,
-//               letterSpacing: .29,
-//               fontWeight: FontWeight.w600,
-//               fontFamily: 'Nunito',
-//             ),
-//             hintText: placeholder,
-//           //  alignLabelWithHint: true,
-//             prefix: prefixWidget,
-//             suffixIcon: suffixIcon,
-//             prefixIcon: prefixIcon,
-//             errorText: errorText,
-//             enabled: enabled,
-//             enabledBorder: enableBorder
-//                 ? UnderlineInputBorder(
-//                 borderSide: BorderSide.none)
-//                 : OutlineInputBorder(
-//               borderSide: BorderSide.none,
-//               borderRadius: BorderRadius.circular(8),
-//             ),
-//             labelText: labelText,
-//             fillColor:   Colors.white,
-//             filled: filledEnabled,
-//             border: enableBorder
-//                 ? UnderlineInputBorder(
-//               borderSide: BorderSide.none,
-//             )
-//                 : OutlineInputBorder(
-//                borderSide: BorderSide.none,
-//               borderRadius: BorderRadius.circular(8),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+
+class CustomTextFormField1 extends StatelessWidget {
+  const CustomTextFormField1({
+    super.key,
+    required this.labelText,
+    this.onChanged,
+    this.onFieldSubmitted,
+    this.obscureText,
+    this.suffixIcon,
+  });
+  final String labelText;
+  final Function(String)? onChanged;
+  final Function(String)? onFieldSubmitted;
+  final bool? obscureText;
+  final Widget? suffixIcon;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 24),
+      child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "This field is required";
+          } else {
+            return null;
+          }
+        },
+        onChanged: onChanged,
+        onFieldSubmitted: onFieldSubmitted,
+        obscureText: obscureText ?? false,
+        decoration: InputDecoration(
+          labelText: labelText,
+          suffixIcon: suffixIcon,
+          border: getBorderStyle(),
+          enabledBorder: getBorderStyle(),
+          focusedBorder: getBorderStyle(),
+        ),
+      ),
+    );
+  }
+}
+
+OutlineInputBorder getBorderStyle() {
+  return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(4),
+      borderSide: BorderSide(color: Colors.grey));
+}

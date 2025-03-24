@@ -6,7 +6,7 @@ class CheckUserUseCase {
 
   CheckUserUseCase({required this.authRepository});
 
-  Future<int> call(LoginFormEntity data) {
-    return authRepository.checkUser(data);
+  Future<int> call(LoginFormEntity data) async {
+    return await authRepository.checkUser(data);
   }
 }

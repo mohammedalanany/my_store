@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/login_form_entitiy.dart';
@@ -7,14 +8,13 @@ import 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final CheckUserUseCase checkUserUseCase;
 
-  AuthCubit({
-    required this.checkUserUseCase,
-  }) : super(AuthInitial());
+  AuthCubit({required this.checkUserUseCase}) : super(AuthInitial());
+  GlobalKey<FormState> formKey = GlobalKey();
 
+  final LoginFormEntity loginFormEntity = LoginFormEntity();
   Future<void> checkUser(LoginFormEntity? data) async {
-    emit(CheckUserLoading());
-    print('CheckUserLoading cubit');
     try {
+      emit(CheckUserLoading());
       final result = await checkUserUseCase.call(data!);
       emit(CheckUserLoaded(result));
     } catch (e) {

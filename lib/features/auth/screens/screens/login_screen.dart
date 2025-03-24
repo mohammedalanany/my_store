@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mystore/core/core/depindance_injection/locator_service.dart';
-import 'package:mystore/features/auth/domain/entities/login_form_entitiy.dart';
 import 'package:mystore/features/auth/screens/cubit/auth_cubit.dart';
 
 import '../../../store_main/presentation/screens/screens/widgets/custom_form_widgets.dart';
@@ -9,10 +8,8 @@ import '../cubit/auth_state.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/login-screen';
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   LoginScreen({super.key});
-  final LoginFormEntity loginFormEntity = LoginFormEntity();
 
   @override
   Widget build(BuildContext context) {
@@ -66,98 +63,86 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                Form(
-                  key: _formKey,
-                  child: MyCustomInput(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, top: 10, bottom: 10),
-                    placeholder: "Phone Number or Email",
-                    textInputAction: TextInputAction.done,
-                    onChanged: (val) {
-                      loginFormEntity.value = val.toString();
-                      loginFormEntity.type = 'email';
-                    },
-                    onFieldSubmitted: (_) {},
-                  ),
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Send You AnActivation Code',
-                    style: TextStyle(
-                      fontSize: 12,
-                      letterSpacing: .4,
-                      color: const Color(0x99000000),
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Nunito',
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-//
-
-                ///
                 BlocConsumer<AuthCubit, AuthState>(
                   listener: (context, state) {
                     if (state is CheckUserError) {
+                      // Show error message as a snackbar
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.message)),
+                        SnackBar(
+                          content: Text(state.message,
+                              style: TextStyle(color: Colors.white)),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                     } else if (state is CheckUserLoaded) {
-                      print('User successfully checked!');
-                      // Example navigation:
-                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                      // Proceed to next screen if user check is successful
+                      Navigator.pushNamed(context, '/home');
                     }
                   },
                   builder: (context, state) {
-                    if (state is CheckUserLoading) {
-                      print('CheckUserLoading');
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      );
-                    }
+                    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
 
-                    if (state is CheckUserLoaded) {
-                      print('CheckUserLoaded');
-                      return _buildContinueButton(context, loginFormEntity);
-                    }
+                    return Form(
+                      key: LocatorService.authCubit.formKey,
+                      child: Column(
+                        children: [
+                          CustomTextFormField1(
+                            labelText: "Phone Number or Email",
+                            onChanged: (val) {
+                              LocatorService.authCubit.loginFormEntity.value =
+                                  val.toString();
+                              LocatorService.authCubit.loginFormEntity.type =
+                                  'email';
+                            },
+                            onFieldSubmitted: (_) {},
+                          ),
+                          SizedBox(height: 30),
 
-                    return _buildContinueButton(context, loginFormEntity);
-                  },
-                ),
+                          // Display loading spinner while checking user
+                          state is CheckUserLoading
+                              ? CircularProgressIndicator()
+                              : InkWell(
+                                  onTap: () async {
+                                    print('Button tapped, checking user...');
+                                    await authCubit.checkUser(LocatorService
+                                        .authCubit.loginFormEntity);
+                                  },
+                                  child: Container(
+                                    height: 48,
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF037979),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      'Continue',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        letterSpacing: .42,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Nunito',
+                                      ),
+                                    ),
+                                  ),
+                                ),
 
-                ////
+                          // Show "Continue" button when not loading
 
-                const SizedBox(
-                  height: 24,
-                ),
-                //  if (Provider.of<Auth>(context, listen: false).socialActive == 1)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Text(
-                        '${Localizations.localeOf(context).languageCode == 'en' ? 'Or' : 'أو'}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: .25,
-                          color: const Color(0xDE000000),
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Nunito',
-                        ),
+                          // Show error message below input field if error occurs
+                          if (state is CheckUserError)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(state.message,
+                                  style: TextStyle(color: Colors.red)),
+                            ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 22,
-                    ),
-                  ],
+                    );
+                  },
                 )
               ],
             ),
@@ -166,33 +151,4 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget _buildContinueButton(
-    BuildContext context, LoginFormEntity loginFormEntity) {
-  return InkWell(
-    onTap: () {
-      LocatorService.authCubit.checkUser(loginFormEntity);
-    },
-    child: Container(
-      height: 48,
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF037979),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      alignment: Alignment.center,
-      child: const Text(
-        'Continue Word',
-        style: TextStyle(
-          fontSize: 14,
-          letterSpacing: .42,
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-          fontFamily: 'Nunito',
-        ),
-      ),
-    ),
-  );
 }
